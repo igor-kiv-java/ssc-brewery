@@ -1,5 +1,6 @@
 package guru.sfg.brewery.config;
 
+import guru.sfg.brewery.secutity.SfgPasswordEncoderFactories;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -10,11 +11,27 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.crypto.password.LdapShaPasswordEncoder;
+import org.springframework.security.crypto.password.NoOpPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.crypto.password.StandardPasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+
+    @Bean
+    PasswordEncoder passwordEncoder(){
+        return SfgPasswordEncoderFactories.createDelegatingPasswordEncoder();
+        //        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
+        //        return new BCryptPasswordEncoder(12);
+        //        return new StandardPasswordEncoder();
+        //        return new LdapShaPasswordEncoder();
+        //        return NoOpPasswordEncoder.getInstance();
+    }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -38,17 +55,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.inMemoryAuthentication()
-                .withUser("spting")
-                .password("{noop}guru")
+                .withUser("spring")
+                .password("{bcrypt}$2a$12$GG/Yls3B0QcyaPyCofD9J.NOHkrxGbrbvEUi0yI61g4WSbhK7bZdu")
                 .roles("ADMIN")
                 .and()
                 .withUser("user")
-                .password("{noop}password")
+                .password("{sha256}12279b869e6101c6e71467bc0ea8c9248b63437e502f798d43dd3804474b245f0b6cfc203b55c3eb")
                 .roles("USER");
 
         auth.inMemoryAuthentication()
                 .withUser("scott")
-                .password("{noop}tiger")
+                .password("{bcrypt15}$2a$15$eSbZP9wim4V3IrVss2fL3OEfl.mpP3cTlkOku0R8rzggEkPc4gK9i")
                 .roles("CUSTOMER");
     }
 

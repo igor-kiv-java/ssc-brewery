@@ -12,7 +12,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest
 public class BeerControllerIT extends BaseIT{
 
-    @WithMockUser("spring")
+    @Test
+    void initCreationFormWithSprint() throws Exception{
+        mockMvc.perform(get("/beers/new").with(httpBasic("spring","guru")))
+                .andExpect(status().isOk())
+                .andExpect(view().name("beers/createBeer"))
+                .andExpect(model().attributeExists("beer"));
+    }
+
+//    @WithMockUser("spring")
     @Test
     void initCreationForm() throws Exception{
         mockMvc.perform(get("/beers/new").with(httpBasic("user","password")))
@@ -21,7 +29,6 @@ public class BeerControllerIT extends BaseIT{
                 .andExpect(model().attributeExists("beer"));
     }
 
-    @WithMockUser("spring")
     @Test
     void initCreationFormWithScott() throws Exception{
         mockMvc.perform(get("/beers/new").with(httpBasic("scott","tiger")))
@@ -46,13 +53,13 @@ public class BeerControllerIT extends BaseIT{
                 .andExpect(view().name("beers/findBeers"))
                 .andExpect(model().attributeExists("beer"));
     }
-    @Test
-    void findBeersWithHttpBasic() throws Exception{
-        mockMvc.perform(get("/beers/find").with(httpBasic("spring", "guru")))
-                .andExpect(status().isOk())
-                .andExpect(view().name("beers/findBeers"))
-                .andExpect(model().attributeExists("beer"));
-    }
+//    @Test
+//    void findBeersWithHttpBasic() throws Exception{
+//        mockMvc.perform(get("/beers/find").with(httpBasic("spring", "guru")))
+//                .andExpect(status().isOk())
+//                .andExpect(view().name("beers/findBeers"))
+//                .andExpect(model().attributeExists("beer"));
+//    }
 
 
 
